@@ -570,20 +570,6 @@ nav, main, footer { position: relative; z-index: 1; }
 .project-card:hover .project-desc { opacity: .96; }
 .skill-category, .timeline-item, .detail-row, .contact-link { overflow-wrap: anywhere; }
 
-/* Golden eye-lightning flash synced with the scroll-controlled title reveal */
-.eye-lightning {
-  position: absolute; z-index: 5; left: 50%; top: 43%; width: min(72vw, 760px);
-  height: min(40vh, 330px); transform: translate(-50%,-50%) scale(.75);
-  opacity: 0; pointer-events: none; overflow: visible; mix-blend-mode: screen;
-  filter: drop-shadow(0 0 7px rgba(255,195,65,.95)) drop-shadow(0 0 22px rgba(255,174,32,.6));
-}
-.eye-lightning path {
-  fill: none; stroke: var(--gold-hot); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
-  stroke-dasharray: 320; stroke-dashoffset: 320;
-}
-.eye-lightning .outer { stroke: #ffb52e; stroke-width: 1.5; }
-.eye-lightning.is-live path { animation: boltDraw .32s ease-out forwards; }
-@keyframes boltDraw { to { stroke-dashoffset: 0; } }
 
 /* Keep mobile hero content in a clean stack; never put text over the portrait */
 @media (max-width: 600px) {
