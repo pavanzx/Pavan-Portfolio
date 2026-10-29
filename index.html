@@ -1374,3 +1374,706 @@ footer {
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
 })();
 </script>
+
+<!-- =========================================================
+     PORTFOLIO UPGRADE PACK
+     Paste everything before the final </body> tag.
+     Works with your existing HTML + CSS + GSAP portfolio.
+========================================================= -->
+
+<style>
+/* ---------- 1. GLOBAL CINEMATIC ENHANCEMENTS ---------- */
+:root {
+  --upgrade-glow: rgba(200, 185, 154, 0.18);
+  --upgrade-line: rgba(200, 185, 154, 0.22);
+}
+
+html {
+  scroll-padding-top: 90px;
+}
+
+::selection {
+  background: var(--sand);
+  color: var(--bg);
+}
+
+a, button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--sand);
+  outline-offset: 5px;
+}
+
+/* Subtle animated ambient glow */
+.portfolio-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+
+.portfolio-ambient__orb {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(168, 149, 110, 0.075),
+    transparent 70%
+  );
+  filter: blur(8px);
+  animation: ambientDrift 18s ease-in-out infinite alternate;
+}
+
+.portfolio-ambient__orb:nth-child(1) {
+  top: 20%;
+  left: -150px;
+}
+
+.portfolio-ambient__orb:nth-child(2) {
+  right: -150px;
+  top: 55%;
+  animation-delay: -7s;
+  animation-duration: 22s;
+}
+
+.portfolio-ambient__orb:nth-child(3) {
+  left: 42%;
+  bottom: -180px;
+  animation-delay: -11s;
+  animation-duration: 25s;
+}
+
+@keyframes ambientDrift {
+  from { transform: translate3d(0, -20px, 0) scale(.9); }
+  to   { transform: translate3d(35px, 35px, 0) scale(1.15); }
+}
+
+/* ---------- 2. ENHANCED SECTION TRANSITIONS ---------- */
+section:not(#hero) {
+  position: relative;
+  isolation: isolate;
+}
+
+section:not(#hero)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--gutter, 4.5vw);
+  right: var(--gutter, 4.5vw);
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--upgrade-line),
+    transparent
+  );
+  opacity: .55;
+}
+
+/* Gentle light sweep on section headings */
+.section-title,
+.contact-headline {
+  position: relative;
+  text-wrap: balance;
+}
+
+.section-label {
+  transition: color .35s ease;
+}
+
+section:hover .section-label {
+  color: var(--sand);
+}
+
+/* ---------- 3. PREMIUM PROJECT CARD HOVER ---------- */
+.project-card {
+  position: relative;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  transition:
+    border-color .4s ease,
+    box-shadow .4s ease,
+    background-color .4s ease;
+}
+
+.project-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    350px circle at var(--px, 50%) var(--py, 50%),
+    rgba(200, 185, 154, .12),
+    transparent 70%
+  );
+  transition: opacity .35s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .project-card:hover {
+    border-color: rgba(200, 185, 154, .4);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, .22),
+      0 0 30px rgba(200, 185, 154, .035);
+  }
+
+  .project-card:hover::after {
+    opacity: 1;
+  }
+
+  .project-card .thumb img {
+    transition: transform .8s cubic-bezier(.2, .8, .2, 1);
+  }
+
+  .project-card:hover .thumb img {
+    transform: scale(1.045);
+  }
+
+  .skill-icon-item {
+    transition:
+      transform .35s cubic-bezier(.2, .8, .2, 1),
+      border-color .35s ease,
+      color .35s ease;
+  }
+
+  .skill-icon-item:hover {
+    transform: translateY(-5px);
+    border-color: rgba(200, 185, 154, .35);
+  }
+}
+
+/* ---------- 4. SCROLL-REACTIVE STATUS INDICATOR ---------- */
+.upgrade-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.upgrade-status__dot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: #a7b88a;
+  box-shadow: 0 0 12px rgba(167, 184, 138, .35);
+}
+
+.upgrade-status__dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 1px solid rgba(167, 184, 138, .55);
+  border-radius: 50%;
+  animation: statusPulse 2.2s ease-out infinite;
+}
+
+@keyframes statusPulse {
+  0% { transform: scale(.65); opacity: .8; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* ---------- 5. FLOATING AI COMPANION ---------- */
+.portfolio-companion {
+  position: fixed;
+  right: clamp(14px, 2.5vw, 34px);
+  bottom: clamp(18px, 3vh, 32px);
+  z-index: 120;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  pointer-events: none;
+  font-family: var(--body, sans-serif);
+}
+
+.companion-bubble {
+  width: min(280px, calc(100vw - 40px));
+  padding: 16px 17px;
+  color: var(--cream, #ede5d8);
+  background: rgba(20, 18, 16, .96);
+  border: 1px solid rgba(200, 185, 154, .25);
+  border-radius: 12px 12px 3px 12px;
+  box-shadow: 0 16px 55px rgba(0, 0, 0, .35);
+  opacity: 0;
+  transform: translateY(10px) scale(.97);
+  transform-origin: bottom right;
+  transition:
+    opacity .3s ease,
+    transform .3s cubic-bezier(.2, .8, .2, 1);
+  pointer-events: auto;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.companion-bubble.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.companion-bubble__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.companion-bubble__label {
+  color: var(--sand, #c8b99a);
+  font-family: var(--mono, monospace);
+  font-size: 10px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.companion-bubble__close {
+  color: var(--muted, #8d806c);
+  background: transparent;
+  border: 0;
+  font-size: 19px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 5px;
+}
+
+.companion-bubble__message {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--cream2, #d4c5b0);
+}
+
+.companion-bubble__hint {
+  margin-top: 10px;
+  color: var(--muted, #8d806c);
+  font-family: var(--mono, monospace);
+  font-size: 9px;
+  letter-spacing: .08em;
+}
+
+.companion-trigger {
+  width: 68px;
+  height: 68px;
+  padding: 0;
+  border: 1px solid rgba(200, 185, 154, .4);
+  border-radius: 50%;
+  background: rgba(20, 18, 16, .94);
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, .32),
+    0 0 25px rgba(200, 185, 154, .06);
+  cursor: pointer;
+  pointer-events: auto;
+  display: grid;
+  place-items: center;
+  animation: companionFloat 4s ease-in-out infinite;
+  transition:
+    border-color .3s ease,
+    box-shadow .3s ease,
+    transform .3s ease;
+}
+
+.companion-trigger:hover {
+  border-color: var(--sand, #c8b99a);
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, .4),
+    0 0 28px rgba(200, 185, 154, .15);
+}
+
+.companion-trigger:active {
+  transform: scale(.94);
+}
+
+.companion-trigger svg {
+  width: 49px;
+  height: 49px;
+  overflow: visible;
+}
+
+.companion-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: companionBlink 5s infinite;
+}
+
+.companion-mouth {
+  stroke-dasharray: 25;
+  stroke-dashoffset: 0;
+}
+
+.companion-trigger.is-talking .companion-mouth {
+  animation: companionTalk .25s ease-in-out infinite alternate;
+}
+
+@keyframes companionFloat {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -6px; }
+}
+
+@keyframes companionBlink {
+  0%, 44%, 48%, 78%, 82%, 100% { transform: scaleY(1); }
+  46%, 80% { transform: scaleY(.12); }
+}
+
+@keyframes companionTalk {
+  from { transform: scaleY(.7); }
+  to { transform: scaleY(1.4); }
+}
+
+/* ---------- 6. BACK-TO-TOP BUTTON ---------- */
+.back-to-top {
+  position: fixed;
+  left: clamp(14px, 2.5vw, 30px);
+  bottom: clamp(20px, 3vh, 32px);
+  z-index: 110;
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(200, 185, 154, .24);
+  border-radius: 50%;
+  background: rgba(20, 18, 16, .92);
+  color: var(--sand, #c8b99a);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition:
+    opacity .3s ease,
+    visibility .3s ease,
+    transform .3s ease,
+    border-color .3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  border-color: var(--sand, #c8b99a);
+}
+
+.back-to-top svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ---------- 7. RESPONSIVE + ACCESSIBILITY ---------- */
+@media (max-width: 600px) {
+  .portfolio-companion {
+    right: 12px;
+    bottom: 14px;
+  }
+
+  .companion-trigger {
+    width: 57px;
+    height: 57px;
+  }
+
+  .companion-trigger svg {
+    width: 42px;
+    height: 42px;
+  }
+
+  .companion-bubble {
+    width: min(260px, calc(100vw - 32px));
+  }
+
+  .back-to-top {
+    left: 13px;
+    bottom: 19px;
+    width: 39px;
+    height: 39px;
+  }
+
+  .portfolio-ambient__orb {
+    opacity: .55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-ambient__orb,
+  .companion-trigger,
+  .companion-eye,
+  .companion-trigger.is-talking .companion-mouth,
+  .upgrade-status__dot::after {
+    animation: none !important;
+  }
+
+  .companion-bubble,
+  .back-to-top {
+    transition: none !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+</style>
+
+<!-- Ambient lighting -->
+<div class="portfolio-ambient" aria-hidden="true">
+  <span class="portfolio-ambient__orb"></span>
+  <span class="portfolio-ambient__orb"></span>
+  <span class="portfolio-ambient__orb"></span>
+</div>
+
+<!-- Floating portfolio companion -->
+<div class="portfolio-companion">
+  <div
+    class="companion-bubble"
+    id="companionBubble"
+    role="status"
+    aria-live="polite"
+  >
+    <div class="companion-bubble__top">
+      <span class="companion-bubble__label">Portfolio assistant</span>
+      <button
+        class="companion-bubble__close"
+        id="companionClose"
+        aria-label="Close assistant message"
+        type="button"
+      >×</button>
+    </div>
+    <p class="companion-bubble__message" id="companionMessage">
+      Hey! Welcome to my portfolio. Explore my projects and skills.
+    </p>
+    <p class="companion-bubble__hint" id="companionHint">
+      TAP THE ROBOT TO EXPLORE
+    </p>
+  </div>
+
+  <button
+    class="companion-trigger"
+    id="companionTrigger"
+    type="button"
+    aria-label="Open portfolio assistant"
+    aria-expanded="false"
+    aria-controls="companionBubble"
+  >
+    <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <!-- Antenna -->
+      <path d="M32 10V5" stroke="#c8b99a" stroke-width="2"
+        stroke-linecap="round"/>
+      <circle cx="32" cy="4" r="3" fill="#a8956e"/>
+
+      <!-- Head -->
+      <rect x="9" y="13" width="46" height="38" rx="12"
+        fill="#29241d" stroke="#c8b99a" stroke-width="1.5"/>
+
+      <!-- Ear pieces -->
+      <rect x="4" y="25" width="6" height="14" rx="3"
+        fill="#a8956e"/>
+      <rect x="54" y="25" width="6" height="14" rx="3"
+        fill="#a8956e"/>
+
+      <!-- Face display -->
+      <rect x="15" y="20" width="34" height="23" rx="7"
+        fill="#11100e" stroke="#5c4a33" stroke-width="1"/>
+
+      <!-- Eyes -->
+      <circle class="companion-eye" cx="24" cy="29" r="3"
+        fill="#d4c5b0"/>
+      <circle class="companion-eye" cx="40" cy="29" r="3"
+        fill="#d4c5b0"/>
+
+      <!-- Smile -->
+      <path class="companion-mouth"
+        d="M24 36 Q32 43 40 36"
+        stroke="#c8b99a" stroke-width="2"
+        stroke-linecap="round"/>
+
+      <!-- Body -->
+      <path d="M20 51V56Q20 59 23 59H41Q44 59 44 56V51"
+        fill="#29241d" stroke="#c8b99a" stroke-width="1.5"/>
+      <circle cx="32" cy="54" r="2" fill="#a8956e"/>
+    </svg>
+  </button>
+</div>
+
+<!-- Back-to-top control -->
+<button class="back-to-top" id="backToTop"
+  type="button" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M12 19V5M5 12l7-7 7 7"
+      stroke="currentColor" stroke-width="1.7"
+      stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script>
+(function () {
+  "use strict";
+
+  var trigger = document.getElementById("companionTrigger");
+  var bubble = document.getElementById("companionBubble");
+  var message = document.getElementById("companionMessage");
+  var hint = document.getElementById("companionHint");
+  var closeButton = document.getElementById("companionClose");
+  var backToTop = document.getElementById("backToTop");
+
+  if (!trigger || !bubble || !message || !backToTop) return;
+
+  var reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  var isOpen = false;
+  var currentSection = "hero";
+  var userInteracted = false;
+
+  var sectionMessages = {
+    hero: {
+      message: "Hey! Welcome to my portfolio. I'm your little guide. Scroll down to discover my work.",
+      hint: "EXPLORE THE PORTFOLIO"
+    },
+    about: {
+      message: "This is where you can get to know me, my interests, and the kind of problems I enjoy solving.",
+      hint: "NEXT: SKILLS & TECHNOLOGIES"
+    },
+    skills: {
+      message: "Java, web development, databases, and software testing are part of my technical toolkit.",
+      hint: "NEXT: EXPERIENCE"
+    },
+    experience: {
+      message: "Here you can explore my experience and the practical skills I've developed along the way.",
+      hint: "NEXT: FEATURED PROJECTS"
+    },
+    projects: {
+      message: "The projects are the stars of the show! Explore eBlocker, One A, Civic Care, and Smart APA Guard.",
+      hint: "OPEN A PROJECT TO LEARN MORE"
+    },
+    education: {
+      message: "This section covers my education and certifications. Keep exploring to reach the contact section.",
+      hint: "ALMOST THERE"
+    },
+    contact: {
+      message: "Thanks for exploring! If my work interests you, use the contact links to connect with me.",
+      hint: "LET'S CONNECT"
+    }
+  };
+
+  function setMessage(section) {
+    var data = sectionMessages[section] || sectionMessages.hero;
+    message.textContent = data.message;
+    hint.textContent = data.hint;
+  }
+
+  function openBubble() {
+    isOpen = true;
+    userInteracted = true;
+    bubble.classList.add("is-visible");
+    trigger.classList.add("is-talking");
+    trigger.setAttribute("aria-expanded", "true");
+    trigger.setAttribute("aria-label", "Close portfolio assistant");
+    setMessage(currentSection);
+  }
+
+  function closeBubble() {
+    isOpen = false;
+    bubble.classList.remove("is-visible");
+    trigger.classList.remove("is-talking");
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.setAttribute("aria-label", "Open portfolio assistant");
+  }
+
+  trigger.addEventListener("click", function () {
+    if (isOpen) {
+      closeBubble();
+    } else {
+      openBubble();
+    }
+  });
+
+  closeButton.addEventListener("click", closeBubble);
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") closeBubble();
+  });
+
+  /* Show a welcome message once, without forcing it to stay open. */
+  if (!reducedMotion) {
+    window.setTimeout(function () {
+      if (!userInteracted && window.scrollY < 120) {
+        openBubble();
+      }
+    }, 1800);
+  }
+
+  /* Change the assistant's message as the visitor explores sections. */
+  var sectionIds = [
+    "hero", "about", "skills", "experience",
+    "projects", "education", "contact"
+  ];
+
+  if ("IntersectionObserver" in window) {
+    var sectionObserver = new IntersectionObserver(function (entries) {
+      var visible = entries
+        .filter(function (entry) { return entry.isIntersecting; })
+        .sort(function (a, b) {
+          return b.intersectionRatio - a.intersectionRatio;
+        });
+
+      if (!visible.length) return;
+
+      currentSection = visible[0].target.id;
+      if (isOpen) setMessage(currentSection);
+    }, {
+      rootMargin: "-20% 0px -35% 0px",
+      threshold: [0.05, 0.2, 0.45, 0.7]
+    });
+
+    sectionIds.forEach(function (id) {
+      var section = document.getElementById(id);
+      if (section) sectionObserver.observe(section);
+    });
+  }
+
+  /* Back-to-top visibility and smooth return. */
+  var ticking = false;
+
+  function updateScrollControls() {
+    backToTop.classList.toggle("is-visible", window.scrollY > 650);
+    ticking = false;
+  }
+
+  window.addEventListener("scroll", function () {
+    if (!ticking) {
+      window.requestAnimationFrame(updateScrollControls);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  updateScrollControls();
+
+  backToTop.addEventListener("click", function () {
+    window.scrollTo({
+      top: 0,
+      behavior: reducedMotion ? "auto" : "smooth"
+    });
+  });
+
+  /* Close the assistant when clicking outside it. */
+  document.addEventListener("pointerdown", function (event) {
+    if (isOpen &&
+        !event.target.closest(".portfolio-companion")) {
+      closeBubble();
+    }
+  });
+
+})();
+</script>
