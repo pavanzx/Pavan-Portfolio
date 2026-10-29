@@ -520,11 +520,10 @@ footer {
 
 /* ── CINEMATIC POLISH: cursor-reactive light, scroll reveals, image frames ── */
 :root { --gold-flash: #ffd36a; --gold-hot: #fff4c7; }
-body { cursor: auto; }
-@media (hover:hover) and (pointer:fine) {
-  body { cursor: none; }
-  a, button, .skill-icon-item { cursor: none; }
-}
+/* Use the real system cursor: no gold dot, no hidden pointer. */
+body { cursor: auto !important; }
+a, button, [role="button"], .skill-icon-item { cursor: pointer !important; }
+.cursor, .cursor-dot { display: none !important; opacity: 0 !important; }
 .portfolio-ambient {
   position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
   background: radial-gradient(500px circle at var(--ambient-x,50%) var(--ambient-y,40%), rgba(196,151,69,.075), transparent 70%);
@@ -561,7 +560,10 @@ nav, main, footer { position: relative; z-index: 1; }
 }
 .project-card { transition: background-color .35s, box-shadow .35s; }
 .project-card:focus-within { outline: 1px solid rgba(245,197,107,.7); outline-offset: -2px; }
-.project-card .project-name, .project-card .project-desc, .project-card .project-tech {
+.project-card .project-name, .project-card .project-desc, .project-card .project-tech,
+.project-card .project-period, .project-card .project-icon-title, .project-card .tech-badge {
+  opacity: 1;
+  visibility: visible;
   transition: transform .65s cubic-bezier(.22,1,.36,1), opacity .5s;
 }
 .project-card:hover .project-name { transform: translateX(4px); }
@@ -616,8 +618,12 @@ nav, main, footer { position: relative; z-index: 1; }
 }
 
 </style>
+</head>
+<body>
 
 <!-- ── NAV ── -->
+<div class="portfolio-ambient" aria-hidden="true"></div>
+
 <nav>
   <div class="nav-logo">PAVAN A</div>
   <ul class="nav-links">
@@ -695,6 +701,13 @@ nav, main, footer { position: relative; z-index: 1; }
     </div>
 
     <div class="hero-shade" aria-hidden="true"></div>
+    <svg class="eye-lightning" viewBox="0 0 760 330" aria-hidden="true" focusable="false">
+      <path class="outer" d="M36 154 L112 137 L145 111 L188 126 L229 91 L270 118 L312 105 L349 135 L385 119 L420 143 L458 112 L495 131 L536 102 L575 126 L613 109 L655 135 L724 119"/>
+      <path d="M36 154 L112 137 L145 111 L188 126 L229 91 L270 118 L312 105 L349 135 L385 119 L420 143 L458 112 L495 131 L536 102 L575 126 L613 109 L655 135 L724 119"/>
+      <path d="M230 92 L218 131 L245 124 L232 164 L267 132"/>
+      <path d="M535 103 L521 142 L548 132 L536 170 L571 136"/>
+      <path class="outer" d="M112 137 L91 172 L127 163 L145 191 M613 109 L638 79 L631 119 L668 101"/>
+    </svg>
     <div class="vignette" aria-hidden="true"></div>
     <div class="title-card" aria-hidden="true">
       <p class="tc-kicker">Pavan A · Java Full‑Stack · QA</p>
@@ -1389,6 +1402,7 @@ nav, main, footer { position: relative; z-index: 1; }
         .from($$('.thumb img, .thumb .ph', card), { scale: 1.3, duration: D(1.4), ease: 'expo.out', clearProps: 'transform' }, 0.1)
         .from($$('.project-period, .project-icon-title, .project-desc, .project-tech', card), { y: 26, opacity: 0, stagger: 0.09, duration: D(0.8), ease: 'power3.out' }, 0.35)
         .from($$('.tech-badge', card), { scale: 0.8, opacity: 0, stagger: 0.03, duration: D(0.4), ease: 'power2.out' }, 0.7);
+      tl.eventCallback('onComplete', function () { gsap.set($$('.project-period, .project-icon-title, .project-name, .project-desc, .project-tech, .tech-badge', card), { clearProps: 'opacity,visibility,transform' }); });
     });
 
     /* ---- EDUCATION ---- */
@@ -1437,16 +1451,7 @@ nav, main, footer { position: relative; z-index: 1; }
       px((e.clientX / window.innerWidth - 0.5) * -22); py((e.clientY / window.innerHeight - 0.5) * -16);
     }, { passive: true });
 
-    // cursor ring + dot
-    var cur = $('.cursor'), dot = $('.cursor-dot');
-    var cx = gsap.quickTo(cur, 'x', { duration: 0.45, ease: 'power3' }), cy = gsap.quickTo(cur, 'y', { duration: 0.45, ease: 'power3' });
-    var dx = gsap.quickTo(dot, 'x', { duration: 0.08 }), dy = gsap.quickTo(dot, 'y', { duration: 0.08 });
-    on(document, 'mousemove', function (e) {
-      cx(e.clientX); cy(e.clientY); dx(e.clientX); dy(e.clientY);
-      cur.classList.add('on'); dot.classList.add('on');
-    }, { passive: true });
-    on(document.documentElement, 'mouseleave', function () { cur.classList.remove('on'); dot.classList.remove('on'); });
-    on(document, 'mouseover', function (e) { cur.classList.toggle('big', !!(e.target.closest && e.target.closest('a, button, .project-card, .skill-icon-item'))); });
+    // Keep the native system cursor visible; ambient light and card spotlight still follow pointer movement.
 
     // magnetic buttons
     $$('.btn, .contact-link').forEach(function (el) {
@@ -1495,3 +1500,6 @@ nav, main, footer { position: relative; z-index: 1; }
 
 })();
 </script>
+
+</body>
+</html>
