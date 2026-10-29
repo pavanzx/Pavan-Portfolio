@@ -1130,7 +1130,7 @@ footer {
      scrub   : how long the zoom lags behind your scroll, in seconds
      Hero scroll length is --hero-track in the CSS (260vh).
      Colors live in the :root variables at the top of the CSS. */
-  var CONFIG = { cgpa: '8.43', zoom: 1.08, timing: 1, scrub: 0.7 };
+  var CONFIG = {   cgpa: '8.43',   zoom: 1.12,   timing: 1.25,   scrub: 1.4 };
 
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
@@ -1196,7 +1196,7 @@ footer {
       var cx = heroRight.offsetLeft + zoomEl.offsetLeft + bw / 2;
       var cy = heroRight.offsetTop + zoomEl.offsetTop + bh / 2;
       var s = Math.max(W / bw, H / bh) * CONFIG.zoom;
-      var faceY = 0.28; // roughly where the face sits in the photo
+      var faceY = 0.24; // roughly where the face sits in the photo
       var want = 0.46 * H + (0.5 - faceY) * bh * s;
       var cyEnd = Math.min(bh * s / 2, Math.max(H - bh * s / 2, want)); // keep the photo covering the screen
       return { x: W / 2 - cx, y: cyEnd - cy, s: s };
@@ -1219,10 +1219,42 @@ footer {
         ease: 'power2.inOut', duration: 1
       }, 0)
       .to('.vignette', { opacity: 1, duration: 0.55 }, 0.2)
-      .fromTo('.title-card', { opacity: 0, y: 46, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.2, ease: 'power2.out' }, 0.5)
-      .to('.title-card', { opacity: 0, y: -30, duration: 0.12, ease: 'power1.in' }, 0.82)
-      .to('.hero-fade', { opacity: 1, duration: 0.2 }, 0.8);
+      /* Cinematic dialogue reveal */
+.fromTo(
+  '.title-card',
+  { opacity: 0, y: 30, scale: 0.985 },
+  {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    duration: 0.24,
+    ease: 'power2.out'
+  },
+  0.48
+)
 
+/* Hold the dialogue on screen longer */
+.to(
+  '.title-card',
+  {
+    opacity: 0,
+    y: -18,
+    duration: 0.16,
+    ease: 'power1.in'
+  },
+  0.94
+)
+
+/* Transition to the next section more smoothly */
+.to(
+  '.hero-fade',
+  {
+    opacity: 1,
+    duration: 0.24,
+    ease: 'power1.inOut'
+  },
+  0.94
+);
     /* ---- marquee that speeds up with scroll velocity ---- */
     var mq = gsap.to('.marquee-inner', { xPercent: -50, ease: 'none', duration: 26, repeat: -1 });
     ScrollTrigger.create({
