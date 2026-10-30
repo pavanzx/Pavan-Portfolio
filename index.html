@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Pavan A — Java Developer &amp; QA Engineer</title>
-<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Pavan A — Java Full-Stack Developer and QA Engineer based in Chennai. Open to full-time roles.">
+<meta name="theme-color" content="#0d0c0a">
+<meta property="og:title" content="Pavan A — Java Developer & QA Engineer">
+<meta property="og:description" content="Java Full-Stack · Selenium QA · AI-driven systems. Open to full-time roles.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230d0c0a'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' font-family='Impact,Arial' fill='%23c8b99a'%3EP%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('is-loading');</script>
 <style>
-/* LAYOUT: sticky cinematic hero (copy left, portrait right) → scrolling zooms into the portrait → stacked sections, each with its own reveal */
 :root {
   color-scheme: dark;
   --bg: #0d0c0a;
@@ -26,12 +32,17 @@
   --body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --gutter: clamp(16px, 4.5vw, 4rem);
-  --hero-track: 260vh; /* total hero scroll length: bigger = slower zoom */
+  --hero-track: 280vh; /* hero scroll length: bigger = slower zoom */
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+html.is-loading { overflow: hidden; }
+
 body {
   background: var(--bg);
   color: var(--cream);
@@ -56,6 +67,35 @@ body::before {
 ::-webkit-scrollbar-thumb { background: var(--mud); }
 
 a:focus-visible, .btn:focus-visible { outline: 1px solid var(--sand); outline-offset: 4px; }
+
+/* ── PRELOADER ── */
+.preloader { position: fixed; inset: 0; z-index: 20000; }
+.pl-panel { position: absolute; left: 0; right: 0; height: 50.3%; background: var(--bg); will-change: transform; }
+.pl-top { top: 0; }
+.pl-bot { bottom: 0; }
+.pl-content {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.4rem;
+  padding: 0 var(--gutter);
+}
+.pl-kicker { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--mud); }
+.pl-name { font-family: var(--display); font-size: clamp(4rem, 14vw, 12rem); line-height: 0.9; letter-spacing: 0.04em; color: var(--cream); }
+.pl-bar { width: min(320px, 60vw); height: 1px; background: var(--border); overflow: hidden; }
+.pl-bar i { display: block; height: 100%; background: var(--sand); transform-origin: left; }
+.pl-count {
+  position: absolute; left: var(--gutter); bottom: 2.2rem; z-index: 2;
+  display: flex; align-items: baseline; gap: 0.3rem;
+  font-family: var(--display); font-size: clamp(3rem, 8vw, 6rem); line-height: 1;
+  color: var(--sand2); font-variant-numeric: tabular-nums;
+}
+.pl-count em { font-style: normal; font-size: 0.4em; color: var(--mud); }
+
+/* ── SPIDER (ambient) ── */
+#spider {
+  position: fixed; left: 0; top: 0; width: 100%; height: 100%;
+  z-index: 60; pointer-events: none; opacity: 0; transition: opacity 1.4s;
+}
+#spider.on { opacity: 0.85; }
 
 /* ── NAV ── */
 nav {
@@ -96,7 +136,8 @@ nav {
 }
 
 /* ── HERO (sticky stage inside a tall track) ── */
-#hero { position: relative; height: var(--hero-track); padding: 0; }
+main, footer { position: relative; z-index: 1; }
+#hero { position: relative; height: var(--hero-track); padding: 0; z-index: 1; }
 .hero-stage {
   position: sticky; top: 0; height: 100vh; height: 100svh;
   overflow: hidden; isolation: isolate;
@@ -213,7 +254,7 @@ nav {
     linear-gradient(rgba(13,12,10,0.38), rgba(13,12,10,0.38));
 }
 .title-card {
-  position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: 0;
+  position: absolute; inset: 0; z-index: 5; pointer-events: none; opacity: 0; overflow: hidden;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.3rem;
   text-align: center; padding: 0 var(--gutter);
 }
@@ -223,7 +264,14 @@ nav {
   letter-spacing: 0.03em; color: var(--cream); text-shadow: 0 2px 40px rgba(13,12,10,0.7);
 }
 .tc-line.tc-accent { color: var(--sand); }
+.tc-sweep {
+  position: absolute; top: 0; bottom: 0; left: 0; width: 34%; pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(100deg, transparent 0%, rgba(255,226,150,0.0) 20%, rgba(255,226,150,0.17) 50%, transparent 80%);
+}
 .hero-fade { position: absolute; inset: 0; z-index: 6; background: var(--bg); opacity: 0; pointer-events: none; }
+.lb { position: absolute; left: 0; right: 0; height: 0; background: #000; z-index: 8; pointer-events: none; }
+.lb-top { top: 0; }
+.lb-bot { bottom: 0; }
 
 .corner-bracket { position: absolute; width: 36px; height: 36px; pointer-events: none; z-index: 7; }
 .corner-bracket.tl { top: 1.2rem; left: 1.2rem; border-top: 1px solid rgba(200,185,154,0.25); border-left: 1px solid rgba(200,185,154,0.25); }
@@ -286,6 +334,7 @@ section {
   transition: background-size 0.9s var(--ease);
 }
 .about-body strong.in { background-size: 100% 1px; }
+html.words-dim .about-body .w { opacity: 0.16; }
 .about-details { display: flex; flex-direction: column; gap: 0; }
 .detail-row { display: flex; flex-direction: column; gap: 0.18rem; padding: 1.1rem 0; border-bottom: 1px solid var(--border2); }
 .detail-key { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mud); }
@@ -344,26 +393,17 @@ section {
 .timeline-role { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sand2); margin-bottom: 1rem; }
 .timeline-desc { font-size: 0.88rem; color: var(--cream2); line-height: 1.8; max-width: 560px; }
 
-/* ── PROJECTS ── */
+/* ── PROJECTS (simple) ── */
 #projects { background: var(--bg2); }
-.projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border2); perspective: 1400px; }
+.projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border2); }
 .project-card {
   position: relative; overflow: hidden; min-width: 0; padding: 2.8rem;
   background-color: var(--bg2);
   background-image: radial-gradient(460px circle at var(--px, -400px) var(--py, -400px), rgba(200,185,154,0.07), transparent 60%);
-  transition: background-color 0.3s;
-  transform-style: preserve-3d; will-change: transform;
+  transition: background-color 0.35s;
 }
 .project-card:hover { background-color: var(--bg3); }
-.project-card::before {
-  content: ''; position: absolute; inset: 0; padding: 1px; pointer-events: none; z-index: 2;
-  background: radial-gradient(300px circle at var(--px, 50%) var(--py, 50%), var(--sand), transparent 65%);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-  opacity: 0; transition: opacity 0.4s;
-}
-.project-card:hover::before { opacity: 0.8; }
+.project-card:focus-within { outline: 1px solid rgba(245,197,107,.7); outline-offset: -2px; }
 .project-card::after {
   content: attr(data-num);
   position: absolute; top: -1rem; right: 1.2rem;
@@ -371,14 +411,13 @@ section {
   pointer-events: none; line-height: 1; z-index: 3;
 }
 .thumb {
-  position: relative; overflow: hidden; aspect-ratio: 16 / 10; max-width: 100%;
-  margin-bottom: 1.5rem; border: 1px solid var(--border2); background: var(--bg3);
+  position: relative; overflow: hidden; aspect-ratio: 16 / 9; max-width: 100%;
+  margin-bottom: 1.5rem; border: 1px solid var(--border2); border-radius: 10px;
+  background: radial-gradient(ellipse at center, #111a2a 0%, #07090e 76%);
+  box-shadow: 0 14px 34px rgba(0,0,0,.22), inset 0 0 0 1px rgba(255,255,255,.035);
 }
-.thumb img, .thumb .ph {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  transition: transform 1s var(--ease), opacity 0.4s;
-}
-.thumb img { object-fit: contain; object-position: center; padding: 0; background: #080b12; filter: contrast(1.03) saturate(1.02); }
+.thumb img, .thumb .ph { position: absolute; inset: 0; width: 100%; height: 100%; }
+.thumb img { object-fit: contain; object-position: center; transition: transform .8s var(--ease); }
 .thumb .ph {
   display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; padding: 0.9rem 1rem;
   background-image:
@@ -389,15 +428,15 @@ section {
 }
 .thumb .ph span { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mud); overflow-wrap: anywhere; }
 .thumb.has-img .ph { opacity: 0; }
-.project-card:hover .thumb img, .project-card:hover .thumb .ph { transform: scale(1.06); }
+.project-card:hover .thumb img { transform: scale(1.04); }
 .project-period { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mud); margin-bottom: 0.7rem; }
 .project-icon-title { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 0.9rem; }
 .project-icon {
   width: 48px; height: 48px; flex-shrink: 0; border: 1px solid var(--border);
   display: flex; align-items: center; justify-content: center; background: rgba(200,185,154,0.04);
-  transition: background-color 0.3s, transform 0.6s var(--ease);
+  transition: background-color 0.3s;
 }
-.project-card:hover .project-icon { background: rgba(200,185,154,0.09); transform: rotate(-6deg) scale(1.06); }
+.project-card:hover .project-icon { background: rgba(200,185,154,0.09); }
 .project-name { font-family: var(--display); font-size: 1.7rem; letter-spacing: 0.04em; line-height: 1.1; color: var(--cream); min-width: 0; }
 .project-desc { font-size: 0.85rem; color: var(--cream2); line-height: 1.75; margin-bottom: 1.4rem; }
 .project-tech { display: flex; flex-wrap: wrap; gap: 0.35rem; }
@@ -462,20 +501,33 @@ footer {
 .footer-status { display: flex; align-items: center; gap: 0.5rem; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #7ec98a; animation: pulse 2.2s ease-in-out infinite; }
 
-/* ── CURSOR (desktop, fine pointer only) ── */
-.cursor, .cursor-dot { position: fixed; left: 0; top: 0; pointer-events: none; z-index: 10001; opacity: 0; transition: opacity 0.3s; }
-.cursor { display: none !important; }
-.cursor-dot { width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: #f5c56b; box-shadow: 0 0 12px rgba(245,197,107,.75), 0 0 28px rgba(245,197,107,.28); transition: opacity .2s, scale .25s; }
-.cursor.on, .cursor-dot.on { opacity: 1; }
-.cursor.big { scale: 1.9; background: rgba(200,185,154,0.08); }
+/* ── AMBIENT LIGHT ── */
+a, button, [role="button"], .skill-icon-item { cursor: pointer; }
+.portfolio-ambient {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  background: radial-gradient(500px circle at var(--ambient-x,50%) var(--ambient-y,40%), rgba(196,151,69,.075), transparent 70%);
+}
+.portfolio-ambient::before, .portfolio-ambient::after {
+  content: ""; position: absolute; width: min(42vw,560px); aspect-ratio: 1;
+  border-radius: 50%; filter: blur(72px); opacity: .13;
+  background: radial-gradient(circle, rgba(208,164,85,.75), transparent 68%);
+  animation: ambientDrift 18s ease-in-out infinite alternate;
+}
+.portfolio-ambient::before { left: -12%; top: 18%; }
+.portfolio-ambient::after { right: -14%; bottom: 8%; animation-delay: -8s; }
+.skill-category, .timeline-item, .detail-row, .contact-link { overflow-wrap: anywhere; }
 
 /* ── ANIMATIONS ── */
 @keyframes drift1 { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(-6vw,5vw,0) scale(1.12); } }
 @keyframes drift2 { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(7vw,-4vw,0) scale(1.1); } }
+@keyframes ambientDrift { from { transform: translate3d(-2vw,-2vh,0) scale(.85); } to { transform: translate3d(5vw,4vh,0) scale(1.12); } }
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 @keyframes scrollPulse { 0%,100% { transform: scaleY(1); opacity: 0.5; } 50% { transform: scaleY(0.6); opacity: 1; } }
 
 /* ── RESPONSIVE ── */
+@media (min-width: 901px) {
+  #about { min-height: 100vh; min-height: 100svh; align-content: center; }
+}
 @media (max-width: 900px) {
   :root { --hero-track: 215vh; }
   .nav-links { gap: 1.2rem; overflow-x: auto; scrollbar-width: none; }
@@ -509,69 +561,7 @@ footer {
   footer { flex-direction: column; text-align: center; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  :root { --hero-track: auto; }
-  #hero { height: auto; }
-  .hero-stage { position: relative; height: auto; min-height: 100svh; }
-  .light, .scroll-line, .status-dot { animation: none; }
-  .vignette, .title-card, .hero-fade { display: none; }
-}
-
-/* ── CINEMATIC POLISH: cursor-reactive light, scroll reveals, image frames ── */
-:root { --gold-flash: #ffd36a; --gold-hot: #fff4c7; }
-/* Use the real system cursor: no gold dot, no hidden pointer. */
-body { cursor: auto !important; }
-a, button, [role="button"], .skill-icon-item { cursor: pointer !important; }
-.cursor, .cursor-dot { display: none !important; opacity: 0 !important; }
-.portfolio-ambient {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
-  background: radial-gradient(500px circle at var(--ambient-x,50%) var(--ambient-y,40%), rgba(196,151,69,.075), transparent 70%);
-}
-.portfolio-ambient::before, .portfolio-ambient::after {
-  content: ""; position: absolute; width: min(42vw,560px); aspect-ratio: 1;
-  border-radius: 50%; filter: blur(72px); opacity: .13;
-  background: radial-gradient(circle, rgba(208,164,85,.75), transparent 68%);
-  animation: ambientDrift 18s ease-in-out infinite alternate;
-}
-.portfolio-ambient::before { left: -12%; top: 18%; }
-.portfolio-ambient::after { right: -14%; bottom: 8%; animation-delay: -8s; }
-nav, main, footer { position: relative; z-index: 1; }
-#hero { z-index: 1; }
-@keyframes ambientDrift { from { transform: translate3d(-2vw,-2vh,0) scale(.85); } to { transform: translate3d(5vw,4vh,0) scale(1.12); } }
-
-/* Each project screenshot gets a consistent frame without cropping important UI */
-.thumb {
-  aspect-ratio: 16 / 9;
-  display: grid; place-items: center;
-  border-radius: 10px;
-  background: radial-gradient(ellipse at center, #111a2a 0%, #07090e 76%);
-  box-shadow: 0 14px 34px rgba(0,0,0,.22), inset 0 0 0 1px rgba(255,255,255,.035);
-}
-.thumb img {
-  object-fit: contain !important; object-position: center !important;
-  width: 100%; height: 100%; padding: 0;
-  transform: scale(.985);
-  transition: transform .85s cubic-bezier(.22,1,.36,1), filter .5s;
-}
-.project-card:hover .thumb img, .project-card:focus-within .thumb img {
-  transform: scale(1.035);
-  filter: contrast(1.06) saturate(1.08);
-}
-.project-card { transition: background-color .35s, box-shadow .35s; }
-.project-card:focus-within { outline: 1px solid rgba(245,197,107,.7); outline-offset: -2px; }
-.project-card .project-name, .project-card .project-desc, .project-card .project-tech,
-.project-card .project-period, .project-card .project-icon-title, .project-card .tech-badge {
-  opacity: 1;
-  visibility: visible;
-  transition: transform .65s cubic-bezier(.22,1,.36,1), opacity .5s;
-}
-.project-card:hover .project-name { transform: translateX(4px); }
-.project-card:hover .project-desc { opacity: .96; }
-.skill-category, .timeline-item, .detail-row, .contact-link { overflow-wrap: anywhere; }
-
-
-/* Keep mobile hero content in a clean stack; never put text over the portrait */
+/* Mobile: clean stack, no cinematic hero zoom */
 @media (max-width: 600px) {
   nav { gap: .6rem; padding-top: calc(.75rem + env(safe-area-inset-top,0px)); padding-bottom: .75rem; }
   .nav-logo { font-size: 1.05rem; }
@@ -587,29 +577,45 @@ nav, main, footer { position: relative; z-index: 1; }
   .hero-cta { margin-top: 1.5rem; }
   .hero-stat-strip { margin-top: 1.5rem; padding-top: 1rem; gap: 1rem 1.4rem; }
   .hero-shade { display: none; }
-  .title-card, .vignette, .hero-fade, .scroll-indicator { display: none !important; }
-  .eye-lightning { display: none; }
+  .title-card, .vignette, .hero-fade, .scroll-indicator, .lb { display: none !important; }
   .projects-grid { grid-template-columns: 1fr; }
   .project-card { padding: clamp(1rem, 5vw, 1.5rem); }
-  .thumb { aspect-ratio: 16 / 9; }
   section { padding-top: 4rem; padding-bottom: 4rem; }
   #about { grid-template-columns: 1fr; gap: 2rem; }
   .section-title { margin-bottom: 2rem; }
   .contact-link { max-width: 100%; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .portfolio-ambient::before, .portfolio-ambient::after { animation: none !important; }
-  .eye-lightning path { animation: none !important; }
-  .project-card, .thumb img, .project-card .project-name, .project-card .project-desc { transition: none !important; }
-}
 
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  :root { --hero-track: auto; }
+  #hero { height: auto; }
+  .hero-stage { position: relative; height: auto; min-height: 100svh; }
+  .light, .scroll-line, .status-dot { animation: none; }
+  .vignette, .title-card, .hero-fade, .lb, .preloader, #spider { display: none; }
+  .portfolio-ambient::before, .portfolio-ambient::after { animation: none !important; }
+}
 </style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
+<!-- ── PRELOADER ── -->
+<div class="preloader" id="preloader" aria-hidden="true">
+  <div class="pl-panel pl-top"></div>
+  <div class="pl-panel pl-bot"></div>
+  <div class="pl-content">
+    <p class="pl-kicker">Portfolio · 2026</p>
+    <div class="pl-name">PAVAN A</div>
+    <div class="pl-bar"><i></i></div>
+  </div>
+  <div class="pl-count"><span id="plNum">000</span><em>%</em></div>
+</div>
+
+<!-- ── AMBIENT SPIDER ── -->
+<canvas id="spider" aria-hidden="true"></canvas>
 <div class="portfolio-ambient" aria-hidden="true"></div>
 
+<!-- ── NAV ── -->
 <nav>
   <div class="nav-logo">PAVAN A</div>
   <ul class="nav-links">
@@ -646,7 +652,7 @@ nav, main, footer { position: relative; z-index: 1; }
       </div>
       <div class="hero-stat-strip">
         <div class="stat-item">
-          <span class="stat-num"><span data-cgpa data-count="8.43">84.3</span></span>
+          <span class="stat-num"><span data-cgpa data-count="8.43">8.43</span></span>
           <span class="stat-label">CGPA</span>
         </div>
         <div class="stat-item">
@@ -664,7 +670,6 @@ nav, main, footer { position: relative; z-index: 1; }
       <div class="portrait-zoom">
         <div class="portrait-intro">
           <div class="portrait">
-            <!-- Placeholder shows only when photo.jpg is missing (e.g. this preview). Your real photo replaces it automatically. -->
             <svg class="ph-svg" viewBox="0 0 400 520" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
               <defs>
                 <linearGradient id="phBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--bg3)"/><stop offset="1" style="stop-color:var(--bg)"/></linearGradient>
@@ -687,20 +692,16 @@ nav, main, footer { position: relative; z-index: 1; }
     </div>
 
     <div class="hero-shade" aria-hidden="true"></div>
-    <svg class="eye-lightning" viewBox="0 0 760 330" aria-hidden="true" focusable="false">
-      <path class="outer" d="M36 154 L112 137 L145 111 L188 126 L229 91 L270 118 L312 105 L349 135 L385 119 L420 143 L458 112 L495 131 L536 102 L575 126 L613 109 L655 135 L724 119"/>
-      <path d="M36 154 L112 137 L145 111 L188 126 L229 91 L270 118 L312 105 L349 135 L385 119 L420 143 L458 112 L495 131 L536 102 L575 126 L613 109 L655 135 L724 119"/>
-      <path d="M230 92 L218 131 L245 124 L232 164 L267 132"/>
-      <path d="M535 103 L521 142 L548 132 L536 170 L571 136"/>
-      <path class="outer" d="M112 137 L91 172 L127 163 L145 191 M613 109 L638 79 L631 119 L668 101"/>
-    </svg>
     <div class="vignette" aria-hidden="true"></div>
     <div class="title-card" aria-hidden="true">
       <p class="tc-kicker">Pavan A · Java Full‑Stack · QA</p>
       <p class="tc-line">Builder’s instinct.</p>
       <p class="tc-line tc-accent">Tester’s discipline.</p>
+      <span class="tc-sweep"></span>
     </div>
     <div class="hero-fade" aria-hidden="true"></div>
+    <div class="lb lb-top" aria-hidden="true"></div>
+    <div class="lb lb-bot" aria-hidden="true"></div>
 
     <div class="corner-bracket tl"></div>
     <div class="corner-bracket br"></div>
@@ -753,10 +754,6 @@ nav, main, footer { position: relative; z-index: 1; }
     <div class="detail-row">
       <span class="detail-key">Location</span>
       <span class="detail-val">Chennai, Tamil Nadu · Open to Relocation</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-key">Date of Birth</span>
-      <span class="detail-val">December 6, 2004</span>
     </div>
     <div class="detail-row">
       <span class="detail-key">Email</span>
@@ -1130,10 +1127,10 @@ nav, main, footer { position: relative; z-index: 1; }
   <h2 class="section-title">MY<br>FOUNDATIONS</h2>
   <div class="edu-grid">
     <div class="edu-card">
-      <div class="edu-level">Graduation · Ongoing</div>
+      <div class="edu-level">Graduation · 2026</div>
       <div class="edu-degree">B.Tech Information Technology</div>
       <div class="edu-inst">Bharathidasan Engineering College, Tirupattur</div>
-      <div class="edu-score"><span data-cgpa data-count="8.43">84.3</span> CGPA</div>
+      <div class="edu-score"><span data-cgpa data-count="8.43">8.43</span> CGPA</div>
     </div>
     <div class="edu-card">
       <div class="edu-level">Class XII · 2022</div>
@@ -1211,38 +1208,186 @@ nav, main, footer { position: relative; z-index: 1; }
   </span>
 </footer>
 
-<div class="cursor" aria-hidden="true"></div>
-<div class="cursor-dot" aria-hidden="true"></div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
 <script>
 (function () {
   'use strict';
 
-  /* ───────── TUNING — change these to adjust the feel ─────────
-     cgpa    : shown in the hero stat and the education card
-     zoom    : portrait zoom intensity (1 = just fills the screen, 1.4 = much closer)
-     timing  : multiplies every reveal duration (1.5 = slower, 0.7 = snappier)
-     scrub   : how long the zoom lags behind your scroll, in seconds
-     Hero scroll length is --hero-track in the CSS (260vh).
-     Colors live in the :root variables at the top of the CSS. */
-  var CONFIG = { cgpa: '8.43', zoom: 1.14, timing: 1.12, scrub: 1.15 };
+  /* ───────── TUNING ─────────
+     cgpa   : shown in hero stat + education card
+     zoom   : portrait zoom intensity (1.14 = fills screen, higher = closer)
+     timing : multiplies every reveal duration (1.5 = slower, 0.7 = snappier)
+     scrub  : lag of hero zoom behind scroll (seconds)
+     spider : false to remove the background spider
+     Hero scroll length = --hero-track in CSS. Colors = :root variables. */
+  var CONFIG = { cgpa: '8.43', zoom: 1.14, timing: 1.12, scrub: 1.0, spider: true };
 
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var D = function (n) { return n * CONFIG.timing; };
 
-  // One source of truth for CGPA (updates both places)
-  $$('[data-cgpa]').forEach(function (el) {
-    el.setAttribute('data-count', CONFIG.cgpa);
-    el.textContent = CONFIG.cgpa;
-  });
+  var lenis = null, introTl = null, pre = $('#preloader'), spiderShow = null;
 
-  // Page stays fully readable if the animation library is blocked
-  if (!window.gsap || !window.ScrollTrigger) return;
+  function killPre() {
+    if (pre && pre.parentNode) pre.parentNode.removeChild(pre);
+    pre = null;
+    document.documentElement.classList.remove('is-loading');
+    if (lenis) lenis.start();
+    if (spiderShow) spiderShow();
+  }
+
+  /* ═════════ BACKGROUND SPIDER (ambient, wanders anywhere, runs from the mouse) ═════════ */
+  function initSpider() {
+    var cv = document.getElementById('spider');
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!cv || !CONFIG.spider || reduce) { if (cv) cv.remove(); return null; }
+    var ctx = cv.getContext('2d');
+    var dpr = Math.min(window.devicePixelRatio || 1, 2), W = 0, H = 0, S = 1;
+    function resize() {
+      W = window.innerWidth; H = window.innerHeight; S = W < 700 ? 0.8 : 1.1;
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    }
+    resize(); window.addEventListener('resize', resize);
+
+    var HIPS = [[5, 3], [2, 4.5], [-1.5, 4.5], [-5, 3.2]];
+    var REST = [[19, 16], [9, 22], [-3, 23], [-16, 19]];
+    var feet = [];
+    [-1, 1].forEach(function (side) {
+      for (var i = 0; i < 4; i++) {
+        feet.push({ hx: HIPS[i][0], hy: HIPS[i][1] * side, rx: REST[i][0], ry: REST[i][1] * side, s: side,
+          g: (i + (side > 0 ? 1 : 0)) % 2, x: 0, y: 0, fx: 0, fy: 0, tx: 0, ty: 0, t: 1, stepping: false });
+      }
+    });
+
+    var sp = { x: -90, y: 0, a: 0, v: 0, tx: 0, ty: 0, wait: 0, waiting: false, run: false };
+    var ptr = { x: -9999, y: -9999 };
+    window.addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') { ptr.x = e.clientX; ptr.y = e.clientY; } }, { passive: true });
+    document.addEventListener('mouseleave', function () { ptr.x = -9999; ptr.y = -9999; });
+
+    function toW(px, py) {
+      var c = Math.cos(sp.a), s = Math.sin(sp.a);
+      return [sp.x + (px * c - py * s) * S, sp.y + (px * s + py * c) * S];
+    }
+    function pickTarget(first) {
+      var m = 70;
+      if (!first && Math.random() < 0.12) {           // sometimes wander off-screen and come back
+        var side = Math.floor(Math.random() * 4);
+        if (side === 0) { sp.tx = -90; sp.ty = Math.random() * H; }
+        else if (side === 1) { sp.tx = W + 90; sp.ty = Math.random() * H; }
+        else if (side === 2) { sp.tx = Math.random() * W; sp.ty = -90; }
+        else { sp.tx = Math.random() * W; sp.ty = H + 90; }
+      } else {
+        sp.tx = m + Math.random() * Math.max(10, W - 2 * m);
+        sp.ty = m + Math.random() * Math.max(10, H - 2 * m);
+      }
+    }
+    function spawn() {
+      sp.x = -90; sp.y = H * (0.25 + Math.random() * 0.5); sp.a = 0; sp.v = 0;
+      pickTarget(true);
+      feet.forEach(function (f) { var r = toW(f.rx, f.ry); f.x = r[0]; f.y = r[1]; f.stepping = false; f.t = 1; });
+    }
+
+    function update(dt) {
+      var dx = sp.tx - sp.x, dy = sp.ty - sp.y, dist = Math.hypot(dx, dy);
+      var dp = Math.hypot(sp.x - ptr.x, sp.y - ptr.y), flee = dp < 150;
+      if (flee) {
+        var nx = (sp.x - ptr.x) / (dp || 1), ny = (sp.y - ptr.y) / (dp || 1);
+        sp.tx = Math.min(W - 40, Math.max(40, sp.x + nx * 280));
+        sp.ty = Math.min(H - 40, Math.max(40, sp.y + ny * 280));
+        sp.waiting = false; dx = sp.tx - sp.x; dy = sp.ty - sp.y; dist = Math.hypot(dx, dy);
+      }
+      var vmax = flee ? 250 : 62, turn = flee ? 8 : 3.2, desired = 0;
+      if (dist < 14) {
+        if (!sp.waiting) { sp.waiting = true; sp.wait = 0.5 + Math.random() * 3.2; }
+        sp.wait -= dt;
+        if (sp.wait <= 0) { sp.waiting = false; pickTarget(); }
+      } else {
+        var want = Math.atan2(dy, dx), diff = want - sp.a;
+        diff = Math.atan2(Math.sin(diff), Math.cos(diff));
+        var lim = turn * dt;
+        sp.a += Math.max(-lim, Math.min(lim, diff));
+        desired = vmax * Math.max(0.25, 1 - Math.abs(diff) / 1.6);
+      }
+      sp.v += (desired - sp.v) * Math.min(1, dt * 4);
+      sp.x += Math.cos(sp.a) * sp.v * dt;
+      sp.y += Math.sin(sp.a) * sp.v * dt;
+
+      var c = Math.cos(sp.a), s = Math.sin(sp.a), stepping = [false, false];
+      feet.forEach(function (f) { if (f.stepping) stepping[f.g] = true; });
+      feet.forEach(function (f) {
+        var r = toW(f.rx, f.ry), lx = r[0] + c * sp.v * 0.14, ly = r[1] + s * sp.v * 0.14;
+        if (!f.stepping) {
+          var d = Math.hypot(f.x - r[0], f.y - r[1]);
+          if ((d > 9 * S && !stepping[1 - f.g]) || d > 26 * S) {
+            f.stepping = true; f.t = 0; f.fx = f.x; f.fy = f.y; f.tx = lx; f.ty = ly; stepping[f.g] = true;
+          }
+        } else {
+          f.t += dt / 0.1;
+          if (f.t >= 1) { f.t = 1; f.stepping = false; }
+          var e = f.t * f.t * (3 - 2 * f.t);
+          f.x = f.fx + (f.tx - f.fx) * e; f.y = f.fy + (f.ty - f.fy) * e;
+        }
+      });
+    }
+
+    function draw() {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      if (sp.x < -140 || sp.x > W + 140 || sp.y < -140 || sp.y > H + 140) return;
+      var c = Math.cos(sp.a), s = Math.sin(sp.a), l1 = 14 * S, l2 = 18 * S;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = 'rgba(200,185,154,0.62)';
+      feet.forEach(function (f) {
+        var h = toW(f.hx, f.hy), dx = f.x - h[0], dy = f.y - h[1], d = Math.hypot(dx, dy) || 1;
+        var dd = Math.min(d, l1 + l2 - 0.5), ux = dx / d, uy = dy / d;
+        var a = (l1 * l1 - l2 * l2 + dd * dd) / (2 * dd);
+        var hh = Math.sqrt(Math.max(0, l1 * l1 - a * a));
+        var px = -uy, py = ux, ox = -s * f.s, oy = c * f.s;
+        if (px * ox + py * oy < 0) { px = -px; py = -py; }
+        var kx = h[0] + ux * a + px * hh, ky = h[1] + uy * a + py * hh;
+        ctx.lineWidth = 1.7 * S; ctx.beginPath(); ctx.moveTo(h[0], h[1]); ctx.lineTo(kx, ky); ctx.stroke();
+        ctx.lineWidth = 1.1 * S; ctx.beginPath(); ctx.moveTo(kx, ky); ctx.lineTo(f.x, f.y); ctx.stroke();
+      });
+      ctx.save();
+      ctx.translate(sp.x, sp.y); ctx.rotate(sp.a); ctx.scale(S, S);
+      var g = ctx.createRadialGradient(-10, -2, 1, -9, 0, 10);
+      g.addColorStop(0, '#4a3f2e'); g.addColorStop(1, '#16130f');
+      ctx.fillStyle = g; ctx.strokeStyle = 'rgba(200,185,154,0.55)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.ellipse(-9, 0, 9, 6.6, 0, 0, 6.2832); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(1, 0, 5.6, 4.4, 0, 0, 6.2832); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = 'rgba(200,185,154,0.22)';
+      ctx.beginPath(); ctx.ellipse(-9, 0, 4, 2.2, 0, 0, 6.2832); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(5.5, 1.5); ctx.lineTo(9, 2.3); ctx.moveTo(5.5, -1.5); ctx.lineTo(9, -2.3); ctx.stroke();
+      ctx.fillStyle = 'rgba(255,211,106,0.95)';
+      ctx.beginPath(); ctx.arc(5.2, 1.6, 0.9, 0, 6.2832); ctx.arc(5.2, -1.6, 0.9, 0, 6.2832); ctx.fill();
+      ctx.restore();
+    }
+
+    var last = performance.now();
+    function frame(t) {
+      var dt = Math.min(0.05, (t - last) / 1000); last = t;
+      if (sp.run) { update(dt); draw(); }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+
+    return function show() { if (sp.run) return; spawn(); sp.run = true; cv.classList.add('on'); };
+  }
+  spiderShow = initSpider();
+
+  // One source of truth for CGPA
+  $$('[data-cgpa]').forEach(function (el) { el.setAttribute('data-count', CONFIG.cgpa); el.textContent = CONFIG.cgpa; });
+
+  var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Page stays fully readable if the animation libraries are blocked / reduced motion
+  if (!window.gsap || !window.ScrollTrigger || reduced) { killPre(); return; }
+
   gsap.registerPlugin(ScrollTrigger);
   ScrollTrigger.config({ ignoreMobileResize: true });
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+  setTimeout(killPre, 9000); // failsafe
 
   /* ───────── text splitting (done once) ───────── */
   function splitChars(el) {
@@ -1251,7 +1396,7 @@ nav, main, footer { position: relative; z-index: 1; }
     el.innerHTML = '';
     Array.from(text).forEach(function (c) {
       var m = document.createElement('span'); m.className = 'chm'; m.setAttribute('aria-hidden', 'true');
-      var i = document.createElement('span'); i.className = 'ch'; i.textContent = c === ' ' ? ' ' : c;
+      var i = document.createElement('span'); i.className = 'ch'; i.textContent = c === ' ' ? '\u00a0' : c;
       m.appendChild(i); el.appendChild(m);
     });
     return $$('.ch', el);
@@ -1264,28 +1409,89 @@ nav, main, footer { position: relative; z-index: 1; }
     }).join('');
     return $$('.ln-i', el);
   }
+  function splitWords(root) {
+    var words = [];
+    (function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(function (p) {
+            if (!p) return;
+            if (/^\s+$/.test(p)) { frag.appendChild(document.createTextNode(p)); }
+            else { var s = document.createElement('span'); s.className = 'w'; s.textContent = p; frag.appendChild(s); words.push(s); }
+          });
+          n.parentNode.replaceChild(frag, n);
+        } else if (n.nodeType === 1 && n.tagName !== 'BR') { walk(n); }
+      });
+    })(root);
+    return words;
+  }
+
+  var plChars = splitChars($('.pl-name'));
   var nameChars = splitChars($('.hero-name'));
   nameChars[nameChars.length - 1].classList.add('accent');
   var titleSets = $$('.section-title, .contact-headline').map(function (el) { return { el: el, lines: splitLines(el) }; });
+  var aboutWords = splitWords($('.about-body'));
+  var strongs = $$('.about-body strong');
 
   var mm = gsap.matchMedia();
+  var MOTION = '(prefers-reduced-motion: no-preference)';
 
-  /* ───────── MOTION (everything scroll/animation driven) ───────── */
-  mm.add('(prefers-reduced-motion: no-preference)', function () {
+  /* ═════════ A · SMOOTH SCROLL + PRELOADER + HERO INTRO ═════════ */
+  mm.add(MOTION, function () {
+    var tick = null;
+    if (window.Lenis) {
+      lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.95, smoothWheel: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      tick = function (t) { lenis.raf(t * 1000); };
+      gsap.ticker.add(tick);
+      gsap.ticker.lagSmoothing(0);
+      lenis.stop();
+    }
 
-    /* ---- page-load intro ---- */
-    gsap.timeline({ defaults: { ease: 'power3.out' } })
-      .from('.portrait-intro', { opacity: 0, scale: 1.14, filter: 'blur(18px)', duration: D(1.9), ease: 'power2.out', clearProps: 'filter' }, 0)
-      .from('.nav-logo, .nav-links li', { y: -18, opacity: 0, stagger: 0.05, duration: D(0.7) }, 0.2)
-      .from('.hero-tag', { y: 20, opacity: 0, duration: D(0.8) }, 0.35)
-      .from(nameChars, { yPercent: 115, rotate: 6, stagger: 0.05, duration: D(1.1), ease: 'expo.out' }, 0.45)
-      .from('.role-pill', { x: -26, opacity: 0, stagger: 0.12, duration: D(0.8) }, 0.85)
-      .from('.hero-cta .btn', { y: 24, opacity: 0, stagger: 0.1, duration: D(0.8), clearProps: 'transform,opacity' }, 1.1)
-      .from('.stat-item', { y: 24, opacity: 0, stagger: 0.1, duration: D(0.8) }, 1.25)
-      .from('.corner-bracket', { scale: 0.4, opacity: 0, duration: D(0.8) }, 0.9)
-      .from('.scroll-indicator > *', { opacity: 0, duration: D(0.8) }, 1.6);
+    // anchor links (smooth, pin-aware)
+    $$('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var t = $(a.getAttribute('href')); if (!t) return;
+        e.preventDefault();
+        var tt = (t.parentNode && t.parentNode.classList && t.parentNode.classList.contains('pin-spacer')) ? t.parentNode : t;
+        if (lenis) lenis.scrollTo(tt, { duration: 1.7, easing: function (x) { return 1 - Math.pow(1 - x, 4); } });
+        else tt.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
 
-    /* ---- HERO: scroll-controlled cinematic zoom into the portrait ---- */
+    /* hero intro (paused until the curtain opens) */
+    introTl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+    introTl
+      .from('.portrait-intro', { opacity: 0, scale: 1.55, filter: 'blur(18px)', duration: D(2.2), ease: 'expo.out', clearProps: 'filter' }, 0)
+      .from('.nav-logo, .nav-links li', { y: -18, opacity: 0, stagger: 0.05, duration: D(0.7) }, 0.25)
+      .from('.hero-tag', { y: 20, opacity: 0, duration: D(0.8) }, 0.4)
+      .from(nameChars, { yPercent: 115, rotate: 6, stagger: 0.05, duration: D(1.1), ease: 'expo.out' }, 0.5)
+      .from('.role-pill', { x: -26, opacity: 0, stagger: 0.12, duration: D(0.8) }, 0.9)
+      .from('.hero-cta .btn', { y: 24, opacity: 0, stagger: 0.1, duration: D(0.8), clearProps: 'transform,opacity' }, 1.15)
+      .from('.stat-item', { y: 24, opacity: 0, stagger: 0.1, duration: D(0.8) }, 1.3)
+      .from('.corner-bracket', { scale: 0.4, opacity: 0, duration: D(0.8) }, 0.95)
+      .from('.scroll-indicator > *', { opacity: 0, duration: D(0.8) }, 1.7);
+
+    /* preloader: name builds, counter 0→100, curtain splits open */
+    var plNum = $('#plNum'), counter = { v: 0 };
+    var preTl = gsap.timeline();
+    preTl
+      .from(plChars, { yPercent: 115, stagger: 0.06, duration: 1, ease: 'expo.out' }, 0.1)
+      .from('.pl-kicker', { opacity: 0, y: 10, duration: 0.6 }, 0.2)
+      .to(counter, { v: 100, duration: 1.9, ease: 'power2.inOut', onUpdate: function () { plNum.textContent = ('00' + Math.round(counter.v)).slice(-3); } }, 0.2)
+      .fromTo('.pl-bar i', { scaleX: 0 }, { scaleX: 1, duration: 1.9, ease: 'power2.inOut' }, 0.2)
+      .to('.pl-content, .pl-count', { opacity: 0, y: -16, duration: 0.45, ease: 'power2.in' }, 2.25)
+      .to('.pl-top', { yPercent: -100, duration: 1.15, ease: 'expo.inOut' }, 2.7)
+      .to('.pl-bot', { yPercent: 100, duration: 1.15, ease: 'expo.inOut' }, 2.7)
+      .add(function () { introTl.play(0); }, 2.85)
+      .add(function () { killPre(); ScrollTrigger.refresh(); }, 4.0);
+
+    return function () { if (tick) gsap.ticker.remove(tick); if (lenis) { lenis.destroy(); lenis = null; } };
+  });
+
+  /* ═════════ A2 · HERO: scroll-controlled zoom-through (tablet + desktop) ═════════ */
+  mm.add(MOTION + ' and (min-width: 601px)', function () {
     var stage = $('.hero-stage'), heroRight = $('.hero-right'), zoomEl = $('.portrait-zoom'), heroLeft = $('.hero-left');
     function zoomTarget() {
       var W = stage.clientWidth, H = stage.clientHeight;
@@ -1293,9 +1499,9 @@ nav, main, footer { position: relative; z-index: 1; }
       var cx = heroRight.offsetLeft + zoomEl.offsetLeft + bw / 2;
       var cy = heroRight.offsetTop + zoomEl.offsetTop + bh / 2;
       var s = Math.max(W / bw, H / bh) * CONFIG.zoom;
-      var faceY = 0.24; // aim slightly higher to keep the eyes centered during the cinematic zoom
+      var faceY = 0.24;
       var want = 0.46 * H + (0.5 - faceY) * bh * s;
-      var cyEnd = Math.min(bh * s / 2, Math.max(H - bh * s / 2, want)); // keep the photo covering the screen
+      var cyEnd = Math.min(bh * s / 2, Math.max(H - bh * s / 2, want));
       return { x: W / 2 - cx, y: cyEnd - cy, s: s };
     }
     gsap.timeline({
@@ -1316,14 +1522,46 @@ nav, main, footer { position: relative; z-index: 1; }
         ease: 'power2.inOut', duration: 1
       }, 0)
       .to('.vignette', { opacity: 1, duration: 0.55 }, 0.2)
-      .fromTo('.eye-lightning', { opacity: 0, scale: 0.72 }, { opacity: 0.95, scale: 1, duration: 0.055, ease: 'power2.out' }, 0.43)
-      .to('.eye-lightning', { opacity: 0.35, scale: 1.08, duration: 0.08, ease: 'power1.out' }, 0.49)
-      .to('.eye-lightning', { opacity: 0, scale: 1.16, duration: 0.08, ease: 'power1.in' }, 0.58)
+      // letterbox bars slide in during the push-in
+      .to('.lb', { height: '9svh', duration: 0.14, ease: 'power2.out' }, 0.3)
+      // title card + gold light sweep
       .fromTo('.title-card', { opacity: 0, y: 46, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.2, ease: 'power2.out' }, 0.5)
+      .fromTo('.tc-sweep', { xPercent: -130 }, { xPercent: 420, duration: 0.3, ease: 'power1.inOut' }, 0.52)
+      // zoom THROUGH the face into the dark
+      .to('.portrait', { scale: 2.2, transformOrigin: '50% 30%', ease: 'power3.in', duration: 0.34 }, 0.64)
       .to('.title-card', { opacity: 0, y: -30, duration: 0.12, ease: 'power1.in' }, 0.82)
-      .to('.hero-fade', { opacity: 1, duration: 0.2 }, 0.8);
+      .to('.hero-fade', { opacity: 1, duration: 0.2 }, 0.8)
+      .to('.lb', { height: 0, duration: 0.1, ease: 'power2.in' }, 0.9);
+  });
 
-    /* ---- marquee that speeds up with scroll velocity ---- */
+  /* ═════════ B · ABOUT: zoom-out arrival + word-by-word reveal ═════════ */
+  function aboutEntry(endPos) {
+    gsap.fromTo('#about > div',
+      { scale: 1.14, opacity: 0, transformOrigin: '50% 30%' },
+      { scale: 1, opacity: 1, ease: 'power2.out', scrollTrigger: { trigger: '#about', start: 'top 95%', end: endPos, scrub: 0.6 } });
+  }
+  function dimOn() { document.documentElement.classList.add('words-dim'); return function () { document.documentElement.classList.remove('words-dim'); }; }
+  function underline(self) { var on = self.progress > 0.55; strongs.forEach(function (s) { s.classList.toggle('in', on); }); }
+
+  // desktop with enough height: pin the section, words light up with scroll
+  mm.add(MOTION + ' and (min-width: 901px) and (min-height: 780px)', function () {
+    aboutEntry('top top');
+    gsap.timeline({ scrollTrigger: { trigger: '#about', start: 'top top', end: '+=140%', pin: true, scrub: 0.6, anticipatePin: 1, onUpdate: underline } })
+      .to(aboutWords, { opacity: 1, ease: 'none', stagger: { each: 0.05 }, duration: 0.2 });
+    return dimOn();
+  });
+  // small screens: no pin, words light up while the paragraph crosses the screen
+  mm.add(MOTION + ' and (max-width: 900px), ' + MOTION + ' and (max-height: 779px)', function () {
+    aboutEntry('top 35%');
+    gsap.to(aboutWords, { opacity: 1, ease: 'none', stagger: { each: 0.05 }, duration: 0.2,
+      scrollTrigger: { trigger: '.about-body', start: 'top 80%', end: 'bottom 45%', scrub: 0.5, onUpdate: underline } });
+    return dimOn();
+  });
+
+  /* ═════════ C · EVERYTHING ELSE ═════════ */
+  mm.add(MOTION, function () {
+
+    /* marquee speeds up with scroll velocity */
     var mq = gsap.to('.marquee-inner', { xPercent: -50, ease: 'none', duration: 26, repeat: -1 });
     ScrollTrigger.create({
       onUpdate: function (self) {
@@ -1332,7 +1570,7 @@ nav, main, footer { position: relative; z-index: 1; }
       }
     });
 
-    /* ---- nav: progress line + sliding indicator ---- */
+    /* nav: progress line + sliding indicator */
     gsap.to('.nav-progress', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: 0.2 } });
     var links = $$('.nav-links a'), ind = $('.nav-indicator');
     function setActive(id) {
@@ -1346,24 +1584,26 @@ nav, main, footer { position: relative; z-index: 1; }
       ScrollTrigger.create({ trigger: '#' + id, start: 'top 55%', end: 'bottom 55%', onToggle: function (s) { if (s.isActive) setActive(id); } });
     });
 
-    /* ---- section titles + labels ---- */
+    /* section titles: lines rise + giant-to-settle scale */
     titleSets.forEach(function (t) {
       gsap.from(t.lines, { yPercent: 112, duration: D(1.1), stagger: 0.12, ease: 'expo.out', scrollTrigger: { trigger: t.el, start: 'top 88%', once: true } });
+      gsap.fromTo(t.el, { scale: 1.3, transformOrigin: t.el.classList.contains('contact-headline') ? '50% 60%' : '0% 60%' },
+        { scale: 1, ease: 'none', scrollTrigger: { trigger: t.el, start: 'top 98%', end: 'top 60%', scrub: 0.5 } });
     });
     $$('.section-label').forEach(function (l) {
       gsap.fromTo(l, { opacity: 0, x: -18, '--p': 0 }, { opacity: 1, x: 0, '--p': 1, duration: D(0.9), ease: 'power3.out', scrollTrigger: { trigger: l, start: 'top 92%', once: true } });
     });
 
-    /* ---- ABOUT: blur-in copy, drawn underlines, sliding detail rows ---- */
-    gsap.from('.about-body', { y: 40, opacity: 0, filter: 'blur(8px)', duration: D(1.2), ease: 'power3.out', clearProps: 'filter,transform,opacity', scrollTrigger: { trigger: '.about-body', start: 'top 85%', once: true } });
-    ScrollTrigger.batch('.about-body strong', {
-      start: 'top 92%', once: true,
-      onEnter: function (b) { b.forEach(function (s, i) { setTimeout(function () { s.classList.add('in'); }, 700 + i * 180); }); }
+    /* camera-forward feel: each big block scales up slightly as it arrives */
+    ['.skills-grid', '.timeline', '.projects-grid', '.edu-grid'].forEach(function (sel) {
+      gsap.fromTo(sel, { scale: 0.95, transformOrigin: '50% 0%' },
+        { scale: 1, ease: 'none', scrollTrigger: { trigger: sel, start: 'top 100%', end: 'top 55%', scrub: 0.5 } });
     });
-    gsap.from('.detail-row', { x: 48, opacity: 0, stagger: 0.1, duration: D(0.9), ease: 'power3.out', scrollTrigger: { trigger: '.about-details', start: 'top 85%', once: true } });
-    gsap.fromTo('.about-details', { y: 26 }, { y: -26, ease: 'none', scrollTrigger: { trigger: '#about', start: 'top bottom', end: 'bottom top', scrub: true } });
 
-    /* ---- SKILLS: each category rises in, then its icons pop in sequence ---- */
+    /* about detail rows */
+    gsap.from('.detail-row', { x: 48, opacity: 0, stagger: 0.1, duration: D(0.9), ease: 'power3.out', scrollTrigger: { trigger: '.about-details', start: 'top 85%', once: true } });
+
+    /* skills */
     $$('.skill-category').forEach(function (cat) {
       gsap.timeline({ scrollTrigger: { trigger: cat, start: 'top 88%', once: true } })
         .from(cat, { y: 46, opacity: 0, duration: D(0.8), ease: 'power3.out', clearProps: 'transform,opacity' })
@@ -1371,7 +1611,7 @@ nav, main, footer { position: relative; z-index: 1; }
         .from($$('.skill-icon-item', cat), { scale: 0.7, opacity: 0, y: 14, stagger: 0.06, duration: D(0.55), ease: 'back.out(1.6)', clearProps: 'transform,opacity' }, 0.25);
     });
 
-    /* ---- EXPERIENCE: line draws, columns slide from opposite sides, bar fills with scroll ---- */
+    /* experience */
     $$('.timeline-item').forEach(function (it) {
       gsap.timeline({ scrollTrigger: { trigger: it, start: 'top 82%', once: true } })
         .fromTo(it, { '--p': 0 }, { '--p': 1, duration: D(1.1), ease: 'power2.out' }, 0)
@@ -1380,18 +1620,13 @@ nav, main, footer { position: relative; z-index: 1; }
       gsap.fromTo($('.timeline-duration-bar', it), { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: it, start: 'top 75%', end: 'bottom 55%', scrub: true } });
     });
 
-    /* ---- PROJECTS: image wipes open, card + text cascade ---- */
+    /* projects: SIMPLE fade + rise */
     $$('.project-card').forEach(function (card, i) {
-      var tl = gsap.timeline({ delay: (i % 2) * 0.12, scrollTrigger: { trigger: card, start: 'top 85%', once: true } });
-      tl.from(card, { y: 70, opacity: 0, duration: D(0.9), ease: 'power3.out', clearProps: 'transform,opacity' })
-        .from($('.thumb', card), { clipPath: 'inset(0% 0% 100% 0%)', duration: D(1.1), ease: 'expo.out', clearProps: 'clipPath' }, 0.1)
-        .from($$('.thumb img, .thumb .ph', card), { scale: 1.3, duration: D(1.4), ease: 'expo.out', clearProps: 'transform' }, 0.1)
-        .from($$('.project-period, .project-icon-title, .project-desc, .project-tech', card), { y: 26, opacity: 0, stagger: 0.09, duration: D(0.8), ease: 'power3.out' }, 0.35)
-        .from($$('.tech-badge', card), { scale: 0.8, opacity: 0, stagger: 0.03, duration: D(0.4), ease: 'power2.out' }, 0.7);
-      tl.eventCallback('onComplete', function () { gsap.set($$('.project-period, .project-icon-title, .project-name, .project-desc, .project-tech, .tech-badge', card), { clearProps: 'opacity,visibility,transform' }); });
+      gsap.from(card, { y: 50, opacity: 0, duration: D(0.9), delay: (i % 2) * 0.1, ease: 'power3.out', clearProps: 'transform,opacity',
+        scrollTrigger: { trigger: card, start: 'top 88%', once: true } });
     });
 
-    /* ---- EDUCATION ---- */
+    /* education */
     gsap.from('.edu-card', { y: 50, opacity: 0, stagger: 0.12, duration: D(0.9), ease: 'power3.out', clearProps: 'all', scrollTrigger: { trigger: '.edu-grid', start: 'top 85%', once: true } });
     gsap.set('.cert-item', { opacity: 0, x: -40 });
     ScrollTrigger.batch('.cert-item', {
@@ -1399,33 +1634,39 @@ nav, main, footer { position: relative; z-index: 1; }
       onEnter: function (b) { gsap.to(b, { opacity: 1, x: 0, stagger: 0.1, duration: D(0.8), ease: 'power3.out', overwrite: true }); }
     });
 
-    /* ---- CONTACT ---- */
+    /* contact */
     gsap.from('.contact-sub', { y: 20, opacity: 0, duration: D(0.9), ease: 'power3.out', scrollTrigger: { trigger: '.contact-sub', start: 'top 92%', once: true } });
     gsap.from('.contact-link', { y: 34, opacity: 0, scale: 0.94, stagger: 0.09, duration: D(0.8), ease: 'power3.out', clearProps: 'transform,opacity', scrollTrigger: { trigger: '.contact-links', start: 'top 92%', once: true } });
     gsap.fromTo('.contact-watermark span', { y: -70 }, { y: 70, ease: 'none', scrollTrigger: { trigger: '#contact', start: 'top bottom', end: 'bottom bottom', scrub: true } });
     gsap.from('footer > *', { opacity: 0, y: 14, stagger: 0.1, duration: D(0.8), ease: 'power2.out', scrollTrigger: { trigger: 'footer', start: 'top 98%', once: true } });
 
-    /* ---- number count-ups (final values are already in the HTML) ---- */
+    /* number count-ups (hero ones wait for the intro) */
     $$('[data-count]').forEach(function (el) {
       var raw = el.getAttribute('data-count');
       var end = parseFloat(raw), dec = (raw.split('.')[1] || '').length, suf = el.getAttribute('data-suffix') || '';
-      var o = { v: 0 };
+      var o = { v: 0 }, inHero = !!el.closest('#hero');
       el.textContent = (0).toFixed(dec) + suf;
-      gsap.to(o, {
-        v: end, duration: D(1.8), ease: 'power2.out', delay: el.closest('#hero') ? 1.3 : 0,
+      var vars = {
+        v: end, duration: D(1.8), ease: 'power2.out',
         onUpdate: function () { el.textContent = o.v.toFixed(dec) + suf; },
-        onComplete: function () { el.textContent = end.toFixed(dec) + suf; },
-        scrollTrigger: { trigger: el, start: 'top 92%', once: true }
-      });
+        onComplete: function () { el.textContent = end.toFixed(dec) + suf; }
+      };
+      if (inHero && introTl) {
+        vars.paused = true;
+        var tw = gsap.to(o, vars);
+        introTl.add(function () { tw.play(); }, 1.3);
+      } else {
+        vars.scrollTrigger = { trigger: el, start: 'top 92%', once: true };
+        gsap.to(o, vars);
+      }
     });
   });
 
-  /* ───────── DESKTOP-ONLY polish: spotlight, cursor, magnetic buttons, card tilt ───────── */
+  /* ═════════ DESKTOP-ONLY polish: spotlight, magnetic buttons, card glow ═════════ */
   mm.add('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)', function () {
     var off = [];
     function on(t, ev, fn, opt) { t.addEventListener(ev, fn, opt); off.push(function () { t.removeEventListener(ev, fn, opt); }); }
 
-    // hero spotlight + portrait parallax
     var stage = $('.hero-stage'), spot = $('.spot'), intro = $('.portrait-intro');
     var sx = gsap.quickTo(spot, 'x', { duration: 0.6, ease: 'power3' }), sy = gsap.quickTo(spot, 'y', { duration: 0.6, ease: 'power3' });
     var px = gsap.quickTo(intro, 'x', { duration: 0.9, ease: 'power3' }), py = gsap.quickTo(intro, 'y', { duration: 0.9, ease: 'power3' });
@@ -1437,9 +1678,6 @@ nav, main, footer { position: relative; z-index: 1; }
       px((e.clientX / window.innerWidth - 0.5) * -22); py((e.clientY / window.innerHeight - 0.5) * -16);
     }, { passive: true });
 
-    // Keep the native system cursor visible; ambient light and card spotlight still follow pointer movement.
-
-    // magnetic buttons
     $$('.btn, .contact-link').forEach(function (el) {
       on(el, 'mousemove', function (e) {
         var r = el.getBoundingClientRect();
@@ -1448,29 +1686,25 @@ nav, main, footer { position: relative; z-index: 1; }
       on(el, 'mouseleave', function () { gsap.to(el, { x: 0, y: 0, duration: 0.9, ease: 'elastic.out(1, 0.4)', overwrite: 'auto' }); });
     });
 
-    // project cards: 3D tilt + light that follows the pointer
+    // project cards: soft light that follows the pointer (no tilt)
     $$('.project-card').forEach(function (el) {
       on(el, 'mousemove', function (e) {
-        var r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
-        el.style.setProperty('--px', (x * r.width) + 'px'); el.style.setProperty('--py', (y * r.height) + 'px');
-        gsap.to(el, { rotationY: (x - 0.5) * 8, rotationX: -(y - 0.5) * 6, y: -3, transformPerspective: 1200, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+        var r = el.getBoundingClientRect();
+        el.style.setProperty('--px', (e.clientX - r.left) + 'px'); el.style.setProperty('--py', (e.clientY - r.top) + 'px');
       });
-      on(el, 'mouseleave', function () { gsap.to(el, { rotationY: 0, rotationX: 0, y: 0, duration: 0.8, ease: 'power3.out', overwrite: 'auto' }); });
     });
 
     return function () { off.forEach(function (f) { f(); }); };
   });
 
-  // Recalculate positions after fonts/images settle
   window.addEventListener('load', function () { ScrollTrigger.refresh(); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
 
-  /* Ambient lighting follows the pointer without a visible cursor ring */
+  /* ambient lighting follows the pointer */
   (function () {
-    var root = document.querySelector('.portfolio-ambient');
-    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var fine = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (!root || reduced || !fine) return;
+    var root = $('.portfolio-ambient');
+    var fine = window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!root || !fine) return;
     var frame = 0, lastX = 50, lastY = 40;
     document.addEventListener('pointermove', function (e) {
       lastX = (e.clientX / Math.max(window.innerWidth, 1)) * 100;
