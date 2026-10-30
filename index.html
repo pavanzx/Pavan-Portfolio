@@ -616,6 +616,26 @@ a, button, [role="button"], .skill-icon-item { cursor: pointer; }
   .vignette, .title-card, .hero-fade, .lb, .preloader, #spider { display: none; }
   .portfolio-ambient::before, .portfolio-ambient::after { animation: none !important; }
 }
+  /* ── Mobile / portrait: sticky hero with zoom (also fixes "desktop site" mode) ── */
+@media (max-width: 900px), (max-aspect-ratio: 1/1) {
+  :root { --hero-track: 230vh; }
+  #hero { height: var(--hero-track); }
+  .hero-stage { position: sticky; top: 0; display: block; height: 100vh; height: 100svh; min-height: 0; padding-top: 0; overflow: hidden; }
+  .hero-right { position: absolute; inset: 0; display: block; min-height: 0; width: auto; }
+  .portrait-zoom { position: absolute; left: 12%; top: 12%; width: 76%; max-width: none; height: 46%; min-height: 0; }
+  .hero-left { position: absolute; inset: 0; order: 0; justify-content: flex-end;
+    padding: calc(5.5rem + env(safe-area-inset-top, 0px)) max(var(--gutter), env(safe-area-inset-right, 0px)) 2.2rem max(var(--gutter), env(safe-area-inset-left, 0px)); }
+  .hero-shade { display: block; }
+  .title-card { display: flex !important; }
+  .vignette, .hero-fade, .lb { display: block !important; }
+
+  #about { grid-template-columns: 1fr; gap: 3rem; min-height: 0; }
+  .projects-grid, .edu-grid { grid-template-columns: 1fr; }
+  .timeline-item { grid-template-columns: 1fr; }
+  .timeline-date-col { border-right: none; padding: 2rem 0 0; }
+  .timeline-duration-bar { display: none; }
+  .timeline-content { padding: 1rem 0 2rem; }
+}
 </style>
 </head>
 <body>
@@ -1512,7 +1532,7 @@ a, button, [role="button"], .skill-icon-item { cursor: pointer; }
   });
 
   /* ═════════ A2 · HERO: scroll-controlled zoom-through (tablet + desktop) ═════════ */
-  mm.add(MOTION + ' and (min-width: 901px)', function () {
+  mm.add(MOTION, function () {
     var stage = $('.hero-stage'), heroRight = $('.hero-right'), zoomEl = $('.portrait-zoom'), heroLeft = $('.hero-left');
     function zoomTarget() {
       var W = stage.clientWidth, H = stage.clientHeight;
@@ -1564,19 +1584,19 @@ a, button, [role="button"], .skill-icon-item { cursor: pointer; }
   function dimOn() { document.documentElement.classList.add('words-dim'); return function () { document.documentElement.classList.remove('words-dim'); }; }
   function underline(self) { var on = self.progress > 0.55; strongs.forEach(function (s) { s.classList.toggle('in', on); }); }
 
-  // desktop with enough height: pin the section, words light up with scroll
-  mm.add(MOTION + ' and (min-width: 901px) and (min-height: 780px)', function () {
-    aboutEntry('top top');
-    gsap.timeline({ scrollTrigger: { trigger: '#about', start: 'top top', end: '+=120%', pin: true, scrub: 0.6, anticipatePin: 1, onUpdate: underline } })
-      .to(aboutWords, { opacity: 1, ease: 'none', stagger: { each: 0.04 }, duration: 0.2 })
-      .to({}, { duration: 1 });
+  // desktop: words light up while the section scrolls in, short hold after
+  mm.add(MOTION + ' and (min-width: 901px) and (min-height: 780px) and (min-aspect-ratio: 1/1)', function () {
+    aboutEntry('top 35%');
+    gsap.to(aboutWords, { opacity: 1, ease: 'none', stagger: { each: 0.03 }, duration: 0.2,
+      scrollTrigger: { trigger: '#about', start: 'top 75%', end: 'top 15%', scrub: 0.3, onUpdate: underline } });
+    ScrollTrigger.create({ trigger: '#about', start: 'top top', end: '+=25%', pin: true, anticipatePin: 1 });
     return dimOn();
   });
-  // small screens: no pin, words light up while the paragraph crosses the screen
-  mm.add(MOTION + ' and (max-width: 900px), ' + MOTION + ' and (max-height: 779px)', function () {
+  // small screens
+  mm.add(MOTION + ' and (max-width: 900px), ' + MOTION + ' and (max-height: 779px), ' + MOTION + ' and (max-aspect-ratio: 1/1)', function () {
     aboutEntry('top 60%');
-    gsap.to(aboutWords, { opacity: 1, ease: 'none', stagger: { each: 0.05 }, duration: 0.2,
-      scrollTrigger: { trigger: '.about-body', start: 'top 92%', end: 'bottom 62%', scrub: 0.5, onUpdate: underline } });
+    gsap.to(aboutWords, { opacity: 1, ease: 'none', stagger: { each: 0.04 }, duration: 0.2,
+      scrollTrigger: { trigger: '.about-body', start: 'top 95%', end: 'center 60%', scrub: 0.3, onUpdate: underline } });
     return dimOn();
   });
 
